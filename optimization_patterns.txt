@@ -1,0 +1,51 @@
+# Pattern di ottimizzazione per Mini-Rosetta
+# Formato: pattern_hash sequenza_x86 sequenza_arm descrizione
+# pattern_hash è un identificativo univoco per il pattern
+# sequenza_x86 è una sequenza di byte x86 da riconoscere
+# sequenza_arm è la sequenza di istruzioni ARM ottimizzate da emettere
+
+# Pattern comuni nelle funzioni x86 (preamboli/epiloghi)
+P001 55 48 89 E5 F81F0FE6 AA0E03E6 # push rbp; mov rbp, rsp -> str x6, [sp, -16]!; mov x6, sp
+P002 5D C3 F84107E6 D65F03C0 # pop rbp; ret -> ldr x6, [sp], 16; ret
+P003 48 83 EC 20 D10083FF # sub rsp, 32 -> sub sp, sp, #32
+P004 48 83 C4 20 910083FF # add rsp, 32 -> add sp, sp, #32
+
+# Pattern di operazioni stringhe
+P101 F3 A4 # rep movsb -> implementazione ottimizzata con SIMD ARM
+17A10061 F9400081 8B040083 9AC13FD1 91003063 F8206860 B5000080 14FFFFFD # Algoritmo ottimizzato che usa NEON
+
+P102 F3 A5 # rep movsd -> implementazione ottimizzata con SIMD ARM
+17A10061 F9400081 8B040083 9AC13FD1 91003064 A9401460 A9001460 91003063 B5000080 14FFFFFA # Algoritmo ottimizzato
+
+# Pattern di operazioni matematiche comuni
+P201 B8 01 00 00 00 C1 E0 05 52800020 D3400400 # mov eax, 1; shl eax, 5 -> mov w0, #1; lsl w0, w0, #5
+P202 B8 01 00 00 00 C1 E8 05 52800020 D34004A0 # mov eax, 1; shr eax, 5 -> mov w0, #1; lsr w0, w0, #5
+P203 B8 01 00 00 00 C1 F8 05 52800020 D34004A0 # mov eax, 1; sar eax, 5 -> mov w0, #1; asr w0, w0, #5
+
+# Pattern per operazioni bit-a-bit
+P301 31 C0 5AC00000 # xor eax, eax -> mov w0, wzr
+P302 29 C0 5AC00000 # sub eax, eax -> mov w0, wzr
+P303 33 C0 CA000020 # xor eax, eax / alternativa -> eor w0, w1, w0
+P304 83 F0 FF CA1F0000 # xor eax, -1 -> mvn w0, w0
+
+# Pattern per branch predition
+P401 85 C0 0F 84 XX XX XX XX 6B00001F 54000000 # test eax, eax; je ADDR -> cmp w0, #0; b.eq ADDR
+P402 85 C0 0F 85 XX XX XX XX 6B00001F 54000001 # test eax, eax; jne ADDR -> cmp w0, #0; b.ne ADDR
+
+# Pattern per loop comuni
+P501 FF C8 75 XX 51000400 6B00001F 54FFFFA1 # dec eax; jne XX -> sub w0, w0, #1; cmp w0, #0; b.ne XX
+
+# Ottimizzazioni specifiche per benchmark compilati
+P601 89 C1 01 C8 C1 E0 02 01 C8 AA0003E1 8B000020 D3400480 8B000020 # Sequenza comune in spec benchmark
+
+# Pattern per operazioni SIMD comuni
+P701 0F 28 C1 0F 58 C2 4EA01C00 4EA14800 # movaps xmm0, xmm1; addps xmm0, xmm2 -> mov v0.16b, v1.16b; add v0.4s, v0.4s, v2.4s
+P702 0F 28 C1 0F 59 C2 4EA01C00 6EA14800 # movaps xmm0, xmm1; mulps xmm0, xmm2 -> mov v0.16b, v1.16b; mul v0.4s, v0.4s, v2.4s
+
+# Ottimizzazioni per librerie standard C
+P801 E8 XX XX XX XX 89 C3 85 C0 94000000 AA0003E1 6B00001F # call func; mov ebx, eax; test eax, eax -> bl func; mov x1, x0; cmp w0, #0
+P802 89 C7 E8 XX XX XX XX AA0003E7 94000000 # mov edi, eax; call func -> mov x7, x0; bl func
+
+# Ottimizzazioni per migliorare la sicurezza
+S001 E8 XX XX XX XX C3 D5134FDA 94000000 D50340BF D65F03C0 # call func; ret -> pacibsp; bl func; autibsp; ret
+S002 FF 15 XX XX XX XX D5134FDA F0000000 D50340BF # call [rip+XX] -> pacibsp; blr x0; autibsp

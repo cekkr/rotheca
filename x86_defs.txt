@@ -1,0 +1,45 @@
+# Definizioni x86 per Mini-Rosetta
+# Formato: opcode mnemonic size has_modrm has_sib has_displacement has_immediate
+# has_modrm = 1 se l'istruzione ha un byte ModR/M
+# has_sib = 1 se l'istruzione potrebbe avere un byte SIB
+# has_displacement = 1 se l'istruzione può avere un displacement
+# has_immediate = 1 se l'istruzione ha un valore immediato
+
+0x90 NOP 1 0 0 0 0
+0x89 MOV 2 1 1 1 0
+0x8B MOV 2 1 1 1 0
+0x01 ADD 2 1 1 1 0
+0x03 ADD 2 1 1 1 0
+0x29 SUB 2 1 1 1 0
+0x2B SUB 2 1 1 1 0
+0x21 AND 2 1 1 1 0
+0x23 AND 2 1 1 1 0
+0x09 OR 2 1 1 1 0
+0x0B OR 2 1 1 1 0
+0x31 XOR 2 1 1 1 0
+0x33 XOR 2 1 1 1 0
+0x39 CMP 2 1 1 1 0
+0x3B CMP 2 1 1 1 0
+0xE9 JMP 5 0 0 0 1
+0x74 JE 2 0 0 0 1
+0x75 JNE 2 0 0 0 1
+0xE8 CALL 5 0 0 0 1
+0xC3 RET 1 0 0 0 0
+0x50 PUSH 1 0 0 0 0
+0x58 POP 1 0 0 0 0
+0x0F SIMD_PREFIX 1 0 0 0 0
+0xB8 MOV_IMM 5 0 0 0 1
+0x83 GROUP1_IMM8 2 1 1 1 1
+0x81 GROUP1_IMM32 6 1 1 1 1
+0xFF GROUP5 2 1 1 1 0
+0xC7 MOV_MEM_IMM 6 1 1 1 1
+0x8D LEA 2 1 1 1 0
+
+# Definizioni SIMD
+0x0F28 MOVAPS 3 1 0 0 0
+0x0F29 MOVAPS_STORE 3 1 0 0 0
+0x0F58 ADDPS 3 1 0 0 0
+0x0F59 MULPS 3 1 0 0 0
+0x0F5C SUBPS 3 1 0 0 0
+0x0F54 ANDPS 3 1 0 0 0
+0x0F56 ORPS 3 1 0 0 0

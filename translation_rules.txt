@@ -1,0 +1,49 @@
+# Regole di traduzione per Mini-Rosetta
+# Formato: x86_opcode arm_opcode1 arm_opcode2 ... # descrizione
+# Ogni riga definisce come tradurre un'istruzione x86 in una sequenza di istruzioni ARM
+
+# Istruzioni base
+0x90 0xD503201F # NOP -> NOP
+0x89 0xAA0003E0 # MOV reg, reg -> MOV X0, X0 (da personalizzare in base a ModR/M)
+0x8B 0xF9400000 # MOV reg, [mem] -> LDR (da personalizzare in base a ModR/M)
+0x01 0x8B010000 # ADD reg, reg -> ADD X0, X0, X1 (da personalizzare in base a ModR/M)
+0x03 0x8B010000 # ADD reg, [mem] -> ADD X0, X0, X1 (da personalizzare in base a ModR/M)
+0x29 0xCB010000 # SUB reg, reg -> SUB X0, X0, X1 (da personalizzare in base a ModR/M)
+0x2B 0xCB010000 # SUB reg, [mem] -> SUB X0, X0, X1 (da personalizzare in base a ModR/M)
+0x21 0x8A010000 # AND reg, reg -> AND X0, X0, X1 (da personalizzare in base a ModR/M)
+0x23 0x8A010000 # AND reg, [mem] -> AND X0, X0, X1 (da personalizzare in base a ModR/M)
+0x09 0xAA010000 # OR reg, reg -> ORR X0, X0, X1 (da personalizzare in base a ModR/M)
+0x0B 0xAA010000 # OR reg, [mem] -> ORR X0, X0, X1 (da personalizzare in base a ModR/M)
+0x31 0xCA010000 # XOR reg, reg -> EOR X0, X0, X1 (da personalizzare in base a ModR/M)
+0x33 0xCA010000 # XOR reg, [mem] -> EOR X0, X0, X1 (da personalizzare in base a ModR/M)
+0x39 0xEB01001F # CMP reg, reg -> CMP X0, X1 (da personalizzare in base a ModR/M)
+0x3B 0xEB01001F # CMP reg, [mem] -> CMP X0, X1 (da personalizzare in base a ModR/M)
+
+# Controllo di flusso
+0xE9 0x14000000 # JMP rel32 -> B label
+0x74 0x54000000 # JE rel8 -> B.EQ label
+0x75 0x54000001 # JNE rel8 -> B.NE label
+0xE8 0xF81F0FE0 0x94000000 # CALL -> STR X30, [SP, -16]! + BL label
+0xC3 0xF84107E0 0xD65F03C0 # RET -> LDR X30, [SP], 16 + RET
+
+# Stack
+0x50 0xF81F0FE0 # PUSH reg -> STR X0, [SP, -16]!
+0x58 0xF84107E0 # POP reg -> LDR X0, [SP], 16
+
+# SIMD
+0x0F28 0x4EA01C00 # MOVAPS xmm, xmm -> MOV V0.16B, V0.16B
+0x0F29 0x4EA01C00 # MOVAPS [mem], xmm -> MOV V0.16B, V0.16B + STR
+0x0F58 0x4EA04C00 # ADDPS xmm, xmm -> ADD V0.4S, V0.4S, V1.4S
+0x0F59 0x6EA04C00 # MULPS xmm, xmm -> MUL V0.4S, V0.4S, V1.4S
+0x0F5C 0x4EA0CC00 # SUBPS xmm, xmm -> SUB V0.4S, V0.4S, V1.4S
+
+# Estensioni per Rosetta
+# Istruzioni speciali per migliorare la sicurezza e le prestazioni
+0xFDE0 0xD5034FDF # PAC signature instruction (solo esempio, non un opcode x86 reale)
+0xFDE1 0xD50342DF # BTI target identification (solo esempio, non un opcode x86 reale)
+0xFDE2 0xD53BCC00 # Memory tagging extension (solo esempio, non un opcode x86 reale)
+
+# Regole ottimizzate per pattern comuni negli eseguibili x86
+# Implementa l'equivalente di sequence_of_insns -> ottimizzato_arm
+0x89C3 0xAA0003E1 # MOV EBX, EAX -> MOV X1, X0 (ottimizzazione specifica per questa sequenza esatta)
+0x0103 0x8B000020 # ADD [RBX], EAX -> ADD X0, X1, X0 (ottimizzazione specifica)

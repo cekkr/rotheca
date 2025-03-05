@@ -1,0 +1,103 @@
+{
+    "translator_config": {
+      "version": "1.0",
+      "description": "Mini-Rosetta Configuration File",
+      "created": "2025-03-05",
+      "author": "Mini-Rosetta Team"
+    },
+    
+    "memory_settings": {
+      "x86_memory_size": 16777216,      // 16 MB per codice x86
+      "arm_memory_size": 33554432,      // 32 MB per codice ARM (più spazio per l'espansione)
+      "stack_size": 8388608,            // 8 MB di stack
+      "heap_size": 33554432             // 32 MB di heap
+    },
+    
+    "cache_settings": {
+      "translation_cache_entries": 1024,
+      "translation_block_size": 4096,
+      "enable_persistent_cache": true,
+      "cache_directory": "./cache",
+      "max_cache_file_size": 104857600  // 100 MB massimo per file cache
+    },
+    
+    "optimization_settings": {
+      "optimization_level": 2,          // 0=nessuna, 1=base, 2=avanzata, 3=aggressiva
+      "enable_pattern_matching": true,
+      "enable_jit_compilation": true,
+      "enable_trace_optimization": true,
+      "enable_simd_optimization": true,
+      "enable_multiblock_optimization": true,
+      "max_trace_length": 100,
+      "max_translation_chain": 10
+    },
+    
+    "security_settings": {
+      "enable_pac": true,               // Pointer Authentication Codes
+      "enable_bti": true,               // Branch Target Identification
+      "enable_mte": true,               // Memory Tagging Extension
+      "enable_sandbox": true,
+      "enable_stats_collection": true,
+      "max_execution_time": 300,        // 5 minuti massimo per esecuzione
+      "restricted_syscalls": [
+        "fork", "exec", "socket"
+      ]
+    },
+    
+    "debug_settings": {
+      "log_level": "info",              // error, warn, info, debug, trace
+      "enable_profiling": true,
+      "trace_instruction_execution": false,
+      "trace_register_values": false,
+      "trace_memory_access": false,
+      "dump_translation_blocks": false,
+      "log_file": "./mini-rosetta.log",
+      "profile_output": "./mini-rosetta-profile.json"
+    },
+    
+    "extensions": {
+      "load_plugins": true,
+      "plugin_directory": "./plugins",
+      "enabled_plugins": [
+        "memory_profiler",
+        "instruction_trace",
+        "performance_analyzer"
+      ]
+    },
+    
+    "compatibility_features": {
+      "x86_extensions": {
+        "SSE": true,
+        "SSE2": true,
+        "SSE3": true,
+        "SSSE3": true,
+        "SSE4.1": true,
+        "SSE4.2": true,
+        "AVX": true,
+        "AVX2": false,
+        "FMA": true,
+        "AES": true
+      },
+      "emulate_x87_fpu": true,
+      "emulate_mmx": true,
+      "handle_self_modifying_code": true,
+      "handle_position_independent_code": true
+    },
+    
+    "file_paths": {
+      "x86_defs_file": "x86_defs.txt",
+      "arm_defs_file": "arm_defs.txt",
+      "translation_rules_file": "translation_rules.txt",
+      "register_mapping_file": "register_mapping.txt",
+      "optimization_patterns_file": "optimization_patterns.txt",
+      "syscall_mapping_file": "syscall_mapping.txt"
+    },
+    
+    "performance_tuning": {
+      "thread_count": 4,               // Numero di thread per la traduzione parallela
+      "prefetch_blocks": true,         // Prefetch dei blocchi di codice potenzialmente eseguiti
+      "speculative_translation": true, // Traduzione speculativa dei blocchi target
+      "max_speculative_blocks": 8,     // Numero massimo di blocchi tradotti speculativamente
+      "block_linking_threshold": 5     // Numero minimo di esecuzioni prima del linking diretto
+    }
+  }

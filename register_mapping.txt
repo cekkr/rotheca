@@ -1,0 +1,100 @@
+# Mappa registri x86-to-ARM per Mini-Rosetta
+# Formato: registro_x86 registro_arm descrizione
+
+# Registri general-purpose 64-bit
+RAX X0 Accumulatore/valore di ritorno
+RBX X1 Base
+RCX X2 Contatore
+RDX X3 Dati
+RSI X4 Source Index
+RDI X5 Destination Index
+RBP X6 Base Pointer
+RSP SP Stack Pointer
+R8 X8 Registro general-purpose
+R9 X9 Registro general-purpose
+R10 X10 Registro general-purpose
+R11 X11 Registro general-purpose
+R12 X12 Registro general-purpose
+R13 X13 Registro general-purpose
+R14 X14 Registro general-purpose
+R15 X15 Registro general-purpose
+RIP PC Program Counter
+
+# Registri general-purpose 32-bit (parte bassa dei registri 64-bit)
+EAX W0 Accumulatore 32-bit
+EBX W1 Base 32-bit
+ECX W2 Contatore 32-bit
+EDX W3 Dati 32-bit
+ESI W4 Source Index 32-bit
+EDI W5 Destination Index 32-bit
+EBP W6 Base Pointer 32-bit
+ESP WSP Stack Pointer 32-bit
+R8D W8 Registro general-purpose 32-bit
+R9D W9 Registro general-purpose 32-bit
+R10D W10 Registro general-purpose 32-bit
+R11D W11 Registro general-purpose 32-bit
+R12D W12 Registro general-purpose 32-bit
+R13D W13 Registro general-purpose 32-bit
+R14D W14 Registro general-purpose 32-bit
+R15D W15 Registro general-purpose 32-bit
+
+# Registri general-purpose 16-bit (x86) 
+AX W0 Accumulatore 16-bit
+BX W1 Base 16-bit
+CX W2 Contatore 16-bit
+DX W3 Dati 16-bit
+SI W4 Source Index 16-bit
+DI W5 Destination Index 16-bit
+BP W6 Base Pointer 16-bit
+SP WSP Stack Pointer 16-bit
+
+# Registri general-purpose 8-bit (x86)
+AL W0 Accumulatore low byte
+AH W0 Accumulatore high byte (richiede bit shifting in ARM)
+BL W1 Base low byte
+BH W1 Base high byte (richiede bit shifting in ARM)
+CL W2 Contatore low byte
+CH W2 Contatore high byte (richiede bit shifting in ARM)
+DL W3 Dati low byte
+DH W3 Dati high byte (richiede bit shifting in ARM)
+
+# Flag registers
+RFLAGS NZCV Flags di stato (mapping parziale)
+CF C Carry Flag
+ZF Z Zero Flag
+SF N Negative Flag
+OF V Overflow Flag
+
+# Registri SIMD
+XMM0 V0 Vettore 128-bit
+XMM1 V1 Vettore 128-bit
+XMM2 V2 Vettore 128-bit
+XMM3 V3 Vettore 128-bit
+XMM4 V4 Vettore 128-bit
+XMM5 V5 Vettore 128-bit
+XMM6 V6 Vettore 128-bit
+XMM7 V7 Vettore 128-bit
+XMM8 V8 Vettore 128-bit
+XMM9 V9 Vettore 128-bit
+XMM10 V10 Vettore 128-bit
+XMM11 V11 Vettore 128-bit
+XMM12 V12 Vettore 128-bit
+XMM13 V13 Vettore 128-bit
+XMM14 V14 Vettore 128-bit
+XMM15 V15 Vettore 128-bit
+
+# Registri YMM (estensione 256-bit dei registri XMM)
+# Ogni registro YMM richiede due registri NEON in ARM
+YMM0 V0/V16 Vettore 256-bit (usa due registri NEON)
+YMM1 V1/V17 Vettore 256-bit (usa due registri NEON)
+YMM2 V2/V18 Vettore 256-bit (usa due registri NEON)
+YMM3 V3/V19 Vettore 256-bit (usa due registri NEON)
+YMM4 V4/V20 Vettore 256-bit (usa due registri NEON)
+YMM5 V5/V21 Vettore 256-bit (usa due registri NEON)
+YMM6 V6/V22 Vettore 256-bit (usa due registri NEON)
+YMM7 V7/V23 Vettore 256-bit (usa due registri NEON)
+
+# Note:
+# - Per i registri a 8-bit e 16-bit, sono necessarie istruzioni aggiuntive in ARM per mascherare/spostare bit
+# - Per i registri YMM, l'implementazione richiede due registri NEON V* per ogni registro YMM
+# - I registri segmento (CS, DS, ES, FS, GS, SS) non hanno un equivalente diretto in ARM
