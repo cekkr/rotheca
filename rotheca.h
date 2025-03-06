@@ -11,6 +11,7 @@
 
 #include "xxhash.h"
 #include "mini-rosetta-translator.h"
+#include "cache.h"
 #include "cache-signatures.h"
 #include "cache-persitence.h"
 
